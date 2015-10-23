@@ -18,14 +18,14 @@
 
 /**
  * Core class for Amazon Orders API.
- * 
+ *
  * This is the core class for all objects in the Amazon Orders section.
  * It contains no methods in itself other than the constructor.
  */
 abstract class AmazonOrderCore extends AmazonCore{
     /**
      * AmazonOrdersCore constructor sets up key information used in all Amazon Orders Core requests
-     * 
+     *
      * This constructor is called when initializing all objects in the Amazon Orders Core.
      * The parameters are passed by the child objects' constructors, which are
      * in turn passed to the AmazonCore constructor. See it for more information
@@ -39,7 +39,7 @@ abstract class AmazonOrderCore extends AmazonCore{
     public function __construct($s, $mock = false, $m = null, $config = null){
         parent::__construct($s, $mock, $m, $config);
         include($this->env);
-        
+
         if(isset($AMAZON_VERSION_ORDERS)){
             $this->urlbranch = 'Orders/'.$AMAZON_VERSION_ORDERS;
             $this->options['Version'] = $AMAZON_VERSION_ORDERS;

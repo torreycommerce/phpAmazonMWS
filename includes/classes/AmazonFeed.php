@@ -18,7 +18,7 @@
 
 /**
  * Submits feeds to Amazon.
- * 
+ *
  * This Amazon Feeds Core object can submit feeds to Amazon.
  * In order to submit a feed, the feed's contents (as direct input or from a file)
  * and feed type must be set. Once the feed has been submitted,
@@ -28,10 +28,10 @@ class AmazonFeed extends AmazonFeedsCore{
     private $response;
     private $feedContent;
     private $feedMD5;
-    
+
     /**
      * AmazonFeed submits a Feed to Amazon.
-     * 
+     *
      * The parameters are passed to the parent constructor, which are
      * in turn passed to the AmazonCore constructor. See it for more information
      * on these parameters and common methods.
@@ -44,9 +44,9 @@ class AmazonFeed extends AmazonFeedsCore{
     public function __construct($s, $mock = false, $m = null, $config = null){
         parent::__construct($s, $mock, $m, $config);
         include($this->env);
-        
+
         $this->options['Action'] = 'SubmitFeed';
-        
+
         if(isset($THROTTLE_LIMIT_FEEDSUBMIT)) {
             $this->throttleLimit = $THROTTLE_LIMIT_FEEDSUBMIT;
         }
@@ -55,10 +55,10 @@ class AmazonFeed extends AmazonFeedsCore{
         }
         $this->throttleGroup = 'SubmitFeed';
     }
-    
+
     /**
      * Sets the Feed Content. (Required)
-     * 
+     *
      * Thie method sets the feed's contents from direct input.
      * This parameter is required in order to submit a feed to Amazon.
      * @param string $s <p>The contents to put in the file.</p>
@@ -73,10 +73,10 @@ class AmazonFeed extends AmazonFeedsCore{
             return false;
         }
     }
-    
+
     /**
      * Sets the Feed Content. (Required)
-     * 
+     *
      * This method loads the contents of a file to send as the feed. This
      * parameter is required in order to submit a feed to Amazon.
      * @param string $url <p>The path to a file you want to use.
@@ -93,10 +93,10 @@ class AmazonFeed extends AmazonFeedsCore{
             $this->feedMD5 = base64_encode(md5($this->feedContent,true));
         }
     }
-    
+
     /**
      * Sets the Feed Type. (Required)
-     * 
+     *
      * This method sets the Feed Type to be sent in the next request. This tells
      * Amazon how the Feed should be processsed.
      * This parameter is required in order to submit a feed to Amazon.
@@ -148,10 +148,10 @@ class AmazonFeed extends AmazonFeedsCore{
          *      UIEE Inventory File ~ _POST_UIEE_BOOKLOADER_DATA_
          */
     }
-    
+
     /**
      * Sets the request ID(s). (Optional)
-     * 
+     *
      * This method sets the list of Marketplace IDs to be sent in the next request.
      * Setting this parameter tells Amazon to apply the Feed to more than one
      * Marketplace. These should be IDs for Marketplaces that you are registered
@@ -175,10 +175,10 @@ class AmazonFeed extends AmazonFeedsCore{
             return false;
         }
     }
-    
+
     /**
      * Removes ID options.
-     * 
+     *
      * Use this in case you change your mind and want to remove the Marketplace ID
      * parameters you previously set.
      */
@@ -189,13 +189,13 @@ class AmazonFeed extends AmazonFeedsCore{
             }
         }
     }
-    
+
     /**
      * Turns on or off Purge mode. (Optional)
-     * 
-     * 
+     *
+     *
      * <b>Warning! This parameter can only be used once every 24 hours!</b>
-     * 
+     *
      * This method sets whether or not the tab delimited feed you provide should
      * completely replace old data. Use this parameter only in exceptional cases.
      * If this is not set, Amazon assumes it to be false.
@@ -219,10 +219,10 @@ class AmazonFeed extends AmazonFeedsCore{
             return false;
         }
     }
-    
+
     /**
      * Submits a feed to Amazon.
-     * 
+     *
      * Submits a <i>SubmitFeed</i> request to Amazon. In order to do this, both
      * the feed's contents and feed type are required. The request will not be
      * sent if either of these are not set. Amazon will send a response back,
@@ -238,22 +238,22 @@ class AmazonFeed extends AmazonFeedsCore{
             $this->log("Feed Type must be set in order to submit a feed!",'Warning');
             return false;
         }
-        
+
         $url = $this->urlbase.$this->urlbranch;
-        
+
         $query = $this->genQuery();
-        
+
         $path = $this->options['Action'].'Result';
         if ($this->mockMode){
            $xml = $this->fetchMockFile()->$path;
         } else {
             $headers = $this->genHeader();
             $response = $this->sendRequest("$url?$query",array('Header'=>$headers,'Post'=>$this->feedContent));
-            
+
             if (!$this->checkResponse($response)){
                 return false;
             }
-            
+
             if (isset($response['code']) && $response['code'] == '200'){
                 $body = strstr($response['body'],'<');
                 $xml = simplexml_load_string($body)->$path;
@@ -261,17 +261,17 @@ class AmazonFeed extends AmazonFeedsCore{
                 $this->log("Unexpected response: ".print_r($response,true),'Warning');
                 $xml = simplexml_load_string($response['body'])->$path;
             }
-            
-            
+
+
         }
-        
+
         $this->parseXML($xml->FeedSubmissionInfo);
-        
+
     }
-    
+
     /**
      * Parses XML response into array.
-     * 
+     *
      * This is what reads the response XML and converts it into an array.
      * @param SimpleXMLObject $xml <p>The XML response from Amazon.</p>
      * @return boolean <b>FALSE</b> if no XML data is found
@@ -280,19 +280,19 @@ class AmazonFeed extends AmazonFeedsCore{
         if (!$xml){
             return false;
         }
-        
+
         $this->response = array();
         $this->response['FeedSubmissionId'] = (string)$xml->FeedSubmissionId;
         $this->response['FeedType'] = (string)$xml->FeedType;
         $this->response['SubmittedDate'] = (string)$xml->SubmittedDate;
         $this->response['FeedProcessingStatus'] = (string)$xml->FeedProcessingStatus;
-        
+
         $this->log("Successfully submitted feed #".$this->response['FeedSubmissionId'].' ('.$this->response['FeedType'].')');
     }
-    
+
     /**
      * Generates array for Header.
-     * 
+     *
      * This method creates the Header array to use with cURL. It contains the Content MD5.
      * @return array
      */
@@ -300,10 +300,10 @@ class AmazonFeed extends AmazonFeedsCore{
         $return[0] = "Content-MD5:".$this->feedMD5;
         return $return;
     }
-    
+
     /**
      * Checks whether or not the response is OK.
-     * 
+     *
      * Verifies whether or not the HTTP response has the 200 OK code. If the code
      * is not 200, the incident and error message returned are logged. This method
      * is different than the ones used by other objects due to Amazon sending
@@ -326,10 +326,10 @@ class AmazonFeed extends AmazonFeedsCore{
             return true;
         }
     }
-    
+
     /**
      * Returns the response data in array.
-     * 
+     *
      * It will contain the following fields:
      * <ul>
      * <li><b>FeedSubmissionId</b> - Unique ID for the feed submission</li>
@@ -346,8 +346,8 @@ class AmazonFeed extends AmazonFeedsCore{
             return false;
         }
     }
-    
-    
-    
+
+
+
 }
 ?>
