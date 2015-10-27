@@ -18,7 +18,7 @@
 
 /**
  * Retrieves feeds from Amazon.
- * 
+ *
  * This Amazon Feeds Core object can retrieve the results of a
  * processed feed from Amazon, which can then be saved to a file
  * specified by the user or retrieved as a single string.
@@ -26,10 +26,10 @@
  */
 class AmazonFeedResult extends AmazonFeedsCore{
     private $rawFeed;
-    
+
     /**
      * AmazonFeedResult gets the result of a Feed from Amazon.
-     * 
+     *
      * The parameters are passed to the parent constructor, which are
      * in turn passed to the AmazonCore constructor. See it for more information
      * on these parameters and common methods.
@@ -45,13 +45,13 @@ class AmazonFeedResult extends AmazonFeedsCore{
     public function __construct($s, $id = null, $mock = false, $m = null, $config = null){
         parent::__construct($s, $mock, $m, $config);
         include($this->env);
-        
+
         if($id){
             $this->options['FeedSubmissionId'] = $id;
         }
-        
+
         $this->options['Action'] = 'GetFeedSubmissionResult';
-        
+
         if(isset($THROTTLE_LIMIT_FEEDRESULT)) {
             $this->throttleLimit = $THROTTLE_LIMIT_FEEDRESULT;
         }
@@ -60,10 +60,10 @@ class AmazonFeedResult extends AmazonFeedsCore{
         }
         $this->throttleGroup = 'GetFeedSubmissionResult';
     }
-    
+
     /**
      * Sets the feed submission ID for the next request. (Required)
-     * 
+     *
      * This method sets the feed submission ID to be sent in the next request. This
      * parameter is required in order to retrieve a feed from Amazon.
      * @param string|integer $n <p>Must be numeric</p>
@@ -76,10 +76,10 @@ class AmazonFeedResult extends AmazonFeedsCore{
             return false;
         }
     }
-    
+
     /**
      * Sends a request to Amazon for a feed.
-     * 
+     *
      * Submits a <i>GetFeedSubmissionResult</i> request to Amazon. In order to
      * do this, a feed submission ID is required. Amazon will send back the raw results
      * of the feed as a response, which can be saved to a file using <i>saveFeed</i>.
@@ -90,28 +90,28 @@ class AmazonFeedResult extends AmazonFeedsCore{
             $this->log("Feed Submission ID must be set in order to fetch it!",'Warning');
             return false;
         }
-        
+
         $url = $this->urlbase.$this->urlbranch;
-        
+
         $query = $this->genQuery();
-        
+
         if ($this->mockMode){
            $this->rawFeed = $this->fetchMockFile(false);
         } else {
             $response = $this->sendRequest($url, array('Post'=>$query));
-            
+
             if (!$this->checkResponse($response)){
                 return false;
             }
-            
+
             $this->rawFeed = $response['body'];
         }
-        
+
     }
-    
+
     /**
      * Saves the raw report data to a path you specify.
-     * 
+     *
      * This method will record in the log whether or not the save was successful.
      * @param string $path <p>path for the file to save the feed data in</p>
      * @return boolean <b>FALSE</b> if something goes wrong
@@ -128,10 +128,10 @@ class AmazonFeedResult extends AmazonFeedsCore{
             return false;
         }
     }
-    
+
     /**
      * Returns the entire raw report data.
-     * 
+     *
      * This is useful for handling the report with an external file management system.
      * @return string|boolean The raw report data as a string, or <b>FALSE</b> if there is no data
      */
@@ -141,6 +141,6 @@ class AmazonFeedResult extends AmazonFeedsCore{
         }
         return $this->rawFeed;
     }
-    
+
 }
 ?>
