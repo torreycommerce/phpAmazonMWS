@@ -1,5 +1,5 @@
 {
-    "name": "torreycommerce/phpAmazonMWS",
+    "name": "torreycommerce/php-amazon-mws",
     "type": "library",
     "description": "Open source library for Amazon MWS cloned from CPIGroup/phpAmazonMWS and modified for more generic use.",
     "license": "Apache-2.0",
