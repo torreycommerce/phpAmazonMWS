@@ -1,16 +1,16 @@
 {
-    "name": "cpigroup/php-amazon-mws",
+    "name": "torreycommerce/phpAmazonMWS",
     "type": "library",
-    "description": "An open-source library to connect to Amazon's MWS web services in an object-oriented manner, with a focus on intuitive usage.",
+    "description": "Open source library for Amazon MWS cloned from CPIGroup/phpAmazonMWS and modified for more generic use.",
     "license": "Apache-2.0",
     "keywords": ["API", "Amazon", "PHP"],
     "require":{
-                "php": "~5.4",
-                "ext-curl": "*"
+        "php": "~5.4",
+        "ext-curl": "*"
     },
     "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-                   },
+        "phpunit/phpunit": "3.7.*"
+   },
     "autoload": {
         "classmap": ["includes/classes/"]
     }
