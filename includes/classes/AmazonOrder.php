@@ -215,8 +215,8 @@ class AmazonOrder extends AmazonOrderCore{
         if (isset($xml->BuyerEmail)){
             $d['BuyerEmail'] = (string)$xml->BuyerEmail;
         }
-        if (isset($xml->ShipServiceLevelCategory)){
-            $d['ShipServiceLevelCategory'] = (string)$xml->ShipServiceLevelCategory;
+        if (isset($xml->ShipmentServiceLevelCategory)){
+            $d['ShipmentServiceLevelCategory'] = (string)$xml->ShipmentServiceLevelCategory;
         }
         if (isset($xml->EarliestShipDate)){
             $d['EarliestShipDate'] = (string)$xml->EarliestShipDate;
@@ -258,7 +258,7 @@ class AmazonOrder extends AmazonOrderCore{
      * <li><b>PaymentMethod</b> (optional) - "COD", "CVS", or "Other"</li>
      * <li><b>BuyerName</b> (optional) - name of the buyer</li>
      * <li><b>BuyerEmail</b> (optional) - Amazon-generated email for the buyer</li>
-     * <li><b>ShipServiceLevelCategory</b> (optional) - "Expedited", "NextDay", "SecondDay", or "Standard"</li>
+     * <li><b>ShipmentServiceLevelCategory</b> (optional) - "Expedited", "NextDay", "SecondDay", or "Standard"</li>
      * </ul>
      * @return array|boolean array of data, or <b>FALSE</b> if data not filled yet
      */
@@ -583,9 +583,9 @@ class AmazonOrder extends AmazonOrderCore{
      * </ul>
      * @return string|boolean single value, or <b>FALSE</b> if category not set yet
      */
-    public function getShipServiceLevelCategory(){
-        if (isset($this->data['ShipServiceLevelCategory'])){
-            return $this->data['ShipServiceLevelCategory'];
+    public function getShipmentServiceLevelCategory(){
+        if (isset($this->data['ShipmentServiceLevelCategory'])){
+            return $this->data['ShipmentServiceLevelCategory'];
         } else {
             return false;
         }
